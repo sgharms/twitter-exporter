@@ -95,6 +95,8 @@ ACCESS_TOKEN
 ACCESS_TOKEN_SECRET
 ```
 
-So in my case I do `source secrets && ./twitter_rm.py`.
+So in my case I do `source secrets && PYTHONUNBUFFERED=1 ./twitter_rm.py |tee deletions.log`.
 
+The code after the `&&` just makes the logging faster and stores it to a logfile. A plain
+old `./twitter_rm.py` would work too.
 
