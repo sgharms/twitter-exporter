@@ -20,7 +20,7 @@ def find_files(n):
             sorted_dirnames = sorted(dirnames)
             [find_files(d) for d in sorted_dirnames]
         for file in filenames:
-            file_list.append(f'{dirpath}/{file}')
+            file_list.append("{}/{}".format(dirpath, file))
 
 
 find_files(path)
@@ -59,18 +59,18 @@ def draw_menu(stdscr):
            fn = file_list[counter]
            os.remove(fn)
            fh = open("deletables.txt", "a+")
-           fh.write(f'{title["id_str"]}\n')
+           fh.write(title["id_str"] + "\n")
            fh.close()
            counter += 1
            color_flag = 2
-           last_action = f'DELETED {fn}!'
+           last_action = "DELETED {}!".format(fn)
         elif k == curses.KEY_LEFT:
            fh = open("deletables.txt", "a+")
-           fh.write(f'{title["id_str"]}\n')
+           fh.write(title["id_str"] + "\n")
            fh.close()
            counter += 1
            color_flag = 4
-           last_action = f'Preserved!'
+           last_action = "Preserved!"
 
         stdscr.attron(curses.color_pair(color_flag))
         stdscr.attron(curses.A_BOLD)
@@ -79,7 +79,7 @@ def draw_menu(stdscr):
 
 
         # Declaration of strings
-        statusbarstr = f'Press \'q\' to exit | [{counter + 1} of {len(file_list)}]'
+        statusbarstr = "Press \'q\' to exit | [{} of {}]".format(counter + 1, len(file_list))
         jsonstr = open(file_list[counter], "r").read()
         title = json.loads(jsonstr)
 
