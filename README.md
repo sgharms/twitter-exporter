@@ -78,4 +78,10 @@ snarly code to be expected.
 
 ## Next Steps for Deleters
 
-Once you have a list of deletable IDs, you can use the [Twitter API Dev Center](https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html) to use any of the widely available Twitter interfaces to remove your Blue Bird History.
+Once you have a list of deletable IDs, you can use `twitter_rm.py` to process
+your `deletable.txt` file (full of Tweet ids) and delete them.
+
+In order to do so you'll need to acquire **4** developer tokens from Twitter as
+documented at
+[python-twitter](https://python-twitter.readthedocs.io/en/latest/getting_started.html)
+
