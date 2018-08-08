@@ -83,5 +83,18 @@ your `deletable.txt` file (full of Tweet ids) and delete them.
 
 In order to do so you'll need to acquire **4** developer tokens from Twitter as
 documented at
-[python-twitter](https://python-twitter.readthedocs.io/en/latest/getting_started.html)
+[python-twitter](https://python-twitter.readthedocs.io/en/latest/getting_started.html).
+
+I stored mine in a file called `secrets`, but the variables you should export into the
+shell are
+
+```text
+CONSUMER_KEY
+CONSUMER_SECRET
+ACCESS_TOKEN
+ACCESS_TOKEN_SECRET
+```
+
+So in my case I do `source secrets && ./twitter_rm.py`.
+
 
