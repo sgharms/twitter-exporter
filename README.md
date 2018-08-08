@@ -6,6 +6,11 @@ Export your data export by [exporting your tweet archive](https://twitter.com/se
 
 You're on your way. That's where this code comes in.
 
+1. Use `export_tweets.js` to pull all your tweets into files
+2. Use `query.py` to use a menu based interface to decide which to delete and
+   built a list of Tweet IDs that are deletable
+3. _Use that list to API-delete the tweets (Under development)_
+
 ## Requirements
 
 You must have NodeJS installed. `brew install nodejs` usually does the trick on
@@ -44,9 +49,26 @@ through deleting your history at Twitter.
 Having split up my archive, I put the information in git. I'd recommend you do
 the same.
 
+## Decide what to Keep and Delete
+
+`./query.py (subdir)` e.g. `./query.py 2008`
+
+Here I'm going to find all the exported tweets in `2008`. I could do `2008/08`.
+The goal is to make deleting easy. We use a dating app like interface to
+arrange Death + Our tweet.
+
+* **RIGHT**: Adds the tweet id to `deletables.txt` which we can feed to the
+  twitter API to do the finale remove later. **THIS ALSO DELETES THE FILE FROM
+  LOCAL STORAGE**
+* **LEFT**: Adds the tweet id to `deletables.txt` which we can feed to the
+  twitter API to do the finale remove later. This **DOES NOT** remove the local
+  file. You might reuse this content for a book, or a scrapbook, or import into
+  come other CMS.
+
+**CAVEAT**: This menu is not very smart and may not work (right, at all) in
+narrow widths. Should be fine at 80 x 40. This is write-once code. Bugs and
+snarly code to be expected.
+
 ## Next Steps for Deleters
 
-I'm then going to go through the tweets and move the Tweets I like to Hugo, my
-blogging platform.  All the others, I will delete and track via git. Then I'll
-be able to look at the JSON for the items that were removed and use the Twitter
-API to delete them.
+Once you have a list of deletable IDs, you can use the [Twitter API Dev Center](https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html) to use any of the widely available Twitter interfaces to remove your Blue Bird History.
