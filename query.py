@@ -41,8 +41,8 @@ def draw_menu(stdscr):
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
-
-    last_action = "Ready to rock. <RIGHT> to delete, <LEFT> to save"
+    curses.init_pair(5, curses.COLOR_RED, curses.COLOR_WHITE)
+    curses.init_pair(6, curses.COLOR_BLUE, curses.COLOR_WHITE)
     title =""
 
     # Loop where k is the last character pressed
@@ -53,6 +53,8 @@ def draw_menu(stdscr):
         height, width = stdscr.getmaxyx()
 
         # tindr style. not that i ever knew. right, keep; left, pass
+        color_flag = 0
+        last_action = ""
         if k == curses.KEY_RIGHT:
            fn = file_list[counter]
            os.remove(fn)
@@ -60,17 +62,24 @@ def draw_menu(stdscr):
            fh.write(f'{title["id_str"]}\n')
            fh.close()
            counter += 1
-           last_action = f'DELETED {fn}! <RIGHT> to delete, <LEFT> to save {counter}'
+           color_flag = 2
+           last_action = f'DELETED {fn}!'
         elif k == curses.KEY_LEFT:
            fh = open("deletables.txt", "a+")
            fh.write(f'{title["id_str"]}\n')
            fh.close()
            counter += 1
-           last_action = f'SAVED! <RIGHT> to delete, <LEFT> to save {counter}'
+           color_flag = 4
+           last_action = f'Preserved!'
+
+        stdscr.attron(curses.color_pair(color_flag))
+        stdscr.attron(curses.A_BOLD)
+        last_pos = (width - 1) if len(last_action) == 0 else ( width - len(last_action) - 1 )
+        stdscr.addstr(0,  last_pos, last_action)
 
 
         # Declaration of strings
-        statusbarstr = f'Press \'q\' to exit | [{counter + 1} of {len(file_list)}] | {last_action}'
+        statusbarstr = f'Press \'q\' to exit | [{counter + 1} of {len(file_list)}]'
         jsonstr = open(file_list[counter], "r").read()
         title = json.loads(jsonstr)
 
@@ -100,7 +109,16 @@ def draw_menu(stdscr):
         stdscr.attron(curses.color_pair(3))
         stdscr.addstr(height-1, 0, statusbarstr)
         stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
-        stdscr.attroff(curses.color_pair(3))
+
+        # Menu
+        right_cmd =  "<RIGHT> to delete "
+        left_cmd =  "<LEFT> to preserve "
+
+        stdscr.attron(curses.A_BOLD)
+        stdscr.attron(curses.color_pair(2))
+        stdscr.addstr(height-2, width - len(right_cmd) - len(left_cmd), right_cmd)
+        stdscr.attron(curses.color_pair(4))
+        stdscr.addstr(height-2, 0, left_cmd)
 
 
         # Refresh the screen
