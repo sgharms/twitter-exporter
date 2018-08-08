@@ -1,4 +1,4 @@
-# Twitter Export
+# Twitter Exporter
 
 You've decided to quit or cut down your Twitter footprint. Here's some help.
 
@@ -53,9 +53,12 @@ the same.
 
 `./query.py (subdir)` e.g. `./query.py 2008`
 
-![Preview of Interface](./ui_preview.png)
+![Preview of Interface with my first Tweet](./ui_preview.png)
 
-_Hat Tip: [Clayton McCloud's ncurses demo](https://gist.github.com/claymcleod/b670285f334acd56ad1c)_
+_My First Tweet: time to go!_
+
+
+Hat Tip: [Clayton McCloud's ncurses demo](https://gist.github.com/claymcleod/b670285f334acd56ad1c)
 
 Here I'm going to find all the exported tweets in `2008`. I could do `2008/08`.
 The goal is to make deleting easy. We use a dating app like interface to
