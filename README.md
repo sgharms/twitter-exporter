@@ -9,11 +9,11 @@ You're on your way. That's where this code comes in.
 1. Use `export_tweets.js` to pull all your tweets into files
 2. Use `query.py` to use a menu based interface to decide which to delete and
    built a list of Tweet IDs that are deletable
-3. _Use that list to API-delete the tweets (Under development)_
+3. Use that list to API-delete the tweets (`twitter_rm.py`)
 
 ## Requirements
 
-You must have NodeJS installed. `brew install nodejs` usually does the trick on
+You must have NodeJS and Python installed. `brew install nodejs` usually does the trick on
 Macs.
 
 ## Process
