@@ -13,6 +13,7 @@ const humanize = (n) => {
 }
 
 const presenter = (t) => {
+  t = t.tweet;
   const p = {};
   const keys = 'id_str,created_at,full_text,created_at';
   const cDate = new Date(t.created_at);
