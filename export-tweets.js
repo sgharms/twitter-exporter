@@ -13,6 +13,7 @@ const humanize = (n) => {
 }
 
 const presenter = (t) => {
+  t = t.tweet;
   const p = {};
   const keys = 'id_str,created_at,full_text,created_at';
   const cDate = new Date(t.created_at);
@@ -109,6 +110,7 @@ try {
 }
 
 fs.readFile(fileName, 'utf8', (err, data) => {
-  const tweets = processedTweets(JSON.parse(sanitizeData(data)));
+  const unprocessedTweets = JSON.parse(sanitizeData(data));
+  const tweets = processedTweets(unprocessedTweets);
   statsify(regroupByYMD(tweets));
 });
