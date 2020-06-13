@@ -110,6 +110,7 @@ try {
 }
 
 fs.readFile(fileName, 'utf8', (err, data) => {
-  const tweets = processedTweets(JSON.parse(sanitizeData(data)));
+  const unprocessedTweets = JSON.parse(sanitizeData(data));
+  const tweets = processedTweets(unprocessedTweets);
   statsify(regroupByYMD(tweets));
 });
