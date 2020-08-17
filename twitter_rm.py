@@ -22,6 +22,13 @@ next_line = fh.readline().rstrip()
 while next_line:
     status_id = extract_status_id(next_line)
 
+    try:
+        status_id_to_i = int(status_id)
+        status_id = status_id_to_i
+    except ValueError:
+        next_line = fh.readline().rstrip()
+        continue
+
     print(f"Processing {status_id}")
 
     try:
