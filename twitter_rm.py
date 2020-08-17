@@ -14,6 +14,8 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
 
 fh = open("deletables.txt")
 status_id = fh.readline().rstrip()
+def extract_status_id(inp):
+    return inp.split('|')[0]
 
 while status_id:
     print("Processing {}".format(status_id))
