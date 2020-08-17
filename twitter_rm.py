@@ -2,6 +2,7 @@
 
 import os
 import twitter
+import sys
 import pdb
 
 TWEET_DOES_NOT_EXIST_CODE=144
@@ -12,13 +13,15 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
         access_token_key=os.environ["ACCESS_TOKEN"],
         access_token_secret=os.environ["ACCESS_TOKEN_SECRET"])
 
-fh = open("deletables.txt")
-status_id = fh.readline().rstrip()
 def extract_status_id(inp):
     return inp.split('|')[0]
 
-while status_id:
-    print("Processing {}".format(status_id))
+fh = open(str(sys.argv[1]) or "deletables.txt")
+next_line = fh.readline().rstrip()
+
+while next_line:
+    status_id = extract_status_id(next_line)
+
 
     try:
         result = api.DestroyStatus(status_id)
@@ -27,5 +30,5 @@ while status_id:
             print("Skipped " + status_id)
             pass
 
-    status_id = fh.readline().rstrip()
-
+    next_line = fh.readline().rstrip()
+    
