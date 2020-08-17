@@ -22,12 +22,13 @@ next_line = fh.readline().rstrip()
 while next_line:
     status_id = extract_status_id(next_line)
 
+    print(f"Processing {status_id}")
 
     try:
         result = api.DestroyStatus(status_id)
     except twitter.error.TwitterError as e:
         if e.message[0]['code'] == TWEET_DOES_NOT_EXIST_CODE:
-            print("Skipped " + status_id)
+            print(f"Skipped {status_id}")
             pass
 
     next_line = fh.readline().rstrip()
