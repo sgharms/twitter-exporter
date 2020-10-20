@@ -7,7 +7,7 @@ api = twitter.Api(consumer_key=os.environ['CONSUMER_KEY'],
                   access_token_key=os.environ['ACCESS_TOKEN'],
                   access_token_secret=os.environ['ACCESS_TOKEN_SECRET'])
 
-recent_tweets = api.GetUserTimeline(screen_name=sys.argv[1])
+recent_tweets = api.GetUserTimeline(screen_name=sys.argv[1], count=200, include_rts=True)
 for t in recent_tweets:
     print(f"{t.id}|{t.created_at}|{t.text}")
      
