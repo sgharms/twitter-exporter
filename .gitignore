@@ -1,4 +1,6 @@
-converted_tweets
-tweet.js
+*.sw?
 2008
+converted_tweets
 deletables.txt
+tweet.js
+twitter_secrets

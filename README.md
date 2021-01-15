@@ -100,3 +100,29 @@ So in my case I do `source secrets && PYTHONUNBUFFERED=1 ./twitter_rm.py |tee de
 The code after the `&&` just makes the logging faster and stores it to a logfile. A plain
 old `./twitter_rm.py` would work too.
 
+## Ongoing Maintenance
+
+If you occasionally find yourself tweeting and want to delete your payload,
+follow these steps that leverage Docker.
+
+First build the Docker image:
+
+    docker build  .  -t twimg
+
+Then, provided a file with the API keys called `twitter_secrets` that holds API
+key data per above:
+
+    docker run --env-file twitter_secrets -v $(pwd):/workarea -it --rm twimg python get_recent_tweets.py $TWITTER_ID |tee del
+
+will run in the Dockerized environment:
+
+    python get_recent_tweets.py $TWITTER_ID |tee del
+
+and produce a list of tweets with their ID to STDOUT (and redirect into a file
+called `del` per the `tee` program's specification)
+
+We can then feed that file into:
+
+     docker run --env-file twitter_secrets -v $(pwd):/workarea -it --rm twimg python twitter_rm.py del
+
+And, viol&agrave; you'll remove those tweets!
