@@ -16,7 +16,9 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
 def extract_status_id(inp):
     return inp.split('|')[0]
 
-fh = open(str(sys.argv[1]) or "deletables.txt")
+fn = lambda: sys.argv[1] if sys.argv[1:] else "deletables.txt"
+fh = open(str(fn()))
+
 next_line = fh.readline().rstrip()
 
 while next_line:
