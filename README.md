@@ -112,11 +112,11 @@ First build the Docker image:
 Then, provided a file with the API keys called `twitter_secrets` that holds API
 key data per above:
 
-    docker run --env-file twitter_secrets -v $(pwd):/workarea -it --rm twimg python get_recent_tweets.py sgharms |tee del
+    docker run --env-file twitter_secrets -v $(pwd):/workarea -it --rm twimg python get_recent_tweets.py $TWITTER_ID |tee del
 
 will run in the Dockerized environment:
 
-    python get_recent_tweets.py sgharms |tee del
+    python get_recent_tweets.py $TWITTER_ID |tee del
 
 and produce a list of tweets with their ID to STDOUT (and redirect into a file
 called `del` per the `tee` program's specification)
