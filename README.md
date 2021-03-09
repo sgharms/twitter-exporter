@@ -1,27 +1,30 @@
 # Twitter Exporter
 
-You've decided to quit or cut down your Twitter footprint. Here's some help.
+## Primary Use Cases
 
-Export your data export by [exporting your tweet archive](https://twitter.com/settings/account).
+1. You want to export your Twitter data into small files that can be further
+   processed (perhaps into posts for a statically-generated site?)
+2. You periodically want to enforce a time-to-live on your tweets shorter
+   than...forever
 
-You're on your way. That's where this code comes in.
+## Step 0: Understand the Plan
 
-1. Use `export_tweets.js` to pull all your tweets into files
-2. Use `query.py` to use a menu based interface to decide which to delete and
-   built a list of Tweet IDs that are deletable
-3. Use that list to API-delete the tweets (`twitter_rm.py`)
+The basic operation is to:
 
-## Requirements
+1. Get tweets with their unique ID
+2. Create a list of unique IDs to delete
+3. Provide a list of "deletables" to to `twitter_rm.py`
 
-You must have NodeJS and Python installed. `brew install nodejs` usually does the trick on
-Macs.
+## Step 1: Export Your Archive
 
-## Process
+[Export your tweet archive](https://twitter.com/settings/account). It's
+probably worth putting this raw export into version control.
 
-1. clone this repo to a local machine and `cd` into it
-1. put the file `tweet.js`, from your tweet archive export into the local clone
-1. run `./export_tweets.js`
-1. Look in `converted_tweets`
+## Step 2: Factor Tweets into Files
+
+Put the file `tweet.js`, from your tweet archive export, into your local clone
+of this repository.  Use `export_tweets.js` to pull all your tweets into files
+Look in the `converted_tweets`
 
 ```text
 converted_tweets
@@ -36,33 +39,37 @@ converted_tweets
 │   │   │   ├── 2008-08-22-896076861.tweet.json
 ```
 
+Here's what's inside one of those files:
+
 ```json
 $ more ./converted_tweets/2008/08/22/2008-08-22-895722280.tweet.json
 {"coordinates":null,"retweeted":false,"source":"<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>","entities":{"hashtags":[],"symbols":[],"user_mentions":[],"urls":[]},"display_text_range":["0.0","128.0"],"favorite_count":"0.0","in_reply_to_status_id_str":null,"geo":null,"id_str":"895722280","in_reply_to_user_id":null,"truncated":false,"retweet_count":"0.0","id":"8.9572228E8","in_reply_to_status_id":null,"created_at":"Fri Aug 22 17:19:38 +0000 2008","place":null,"favorited":false,"full_text":"I just joined twitter after disparaging it, hating it, not getting it and generally thinking it kinda sucked.  Hell much colder.","lang":"en","contributors":null,"in_reply_to_screen_name":null,"in_reply_to_user_id_str":null}
 ```
 
-With your tweets split up like this, you can feel secure that you can go
-through deleting your history at Twitter.
+## Step 3: Build a List of Deletables
 
-## Advice
+There are a lot of ways to go about building this list. Given a collection of
+tweets as independent files (i.e. after using `export_tweets.js`), `query.py`
+can provides a menu-based interface to decide which IDs are added to
+`deletables.txt`. This file can then be processed. A lower-fi version will be
+discussed subsequently.
 
-Having split up my archive, I put the information in git. I'd recommend you do
-the same.
 
-## Decide what to Keep and Delete
+`./query.py (subdir)`
 
-`./query.py (subdir)` e.g. `./query.py 2008`
+```shell
+$ ./query.py 2008`
+```
 
 ![Preview of Interface with my first Tweet](./ui_preview.png)
 
 _My First Tweet: time to go!_
 
-
 Hat Tip: [Clayton McCloud's ncurses demo](https://gist.github.com/claymcleod/b670285f334acd56ad1c)
 
-Here I'm going to find all the exported tweets in `2008`. I could do `2008/08`.
-The goal is to make deleting easy. We use a dating app like interface to
-arrange Death + Our tweet.
+Here I'm going to find all the exported tweets in `2008`. I _could_ do
+`2008/08`.  The goal is to make deleting easy. We use a dating-app-like
+interface to arrange Death + Our tweet.
 
 * **RIGHT**: Adds the tweet id to `deletables.txt` which we can feed to the
   twitter API to do the finale remove later. **THIS ALSO DELETES THE FILE FROM
@@ -76,17 +83,29 @@ arrange Death + Our tweet.
 narrow widths. Should be fine at 80 x 40. This is write-once code. Bugs and
 snarly code to be expected.
 
-## Next Steps for Deleters
+Perhaps you can't use an `ncurses` menu-driven program like `query.py`.  If all
+the files are under `git` revision control, an alternative approach might be
+something as simple as:
 
-Once you have a list of deletable IDs, you can use `twitter_rm.py` to process
-your `deletable.txt` file (full of Tweet ids) and delete them.
+```bash
+for file in $(ls *.json); do
+  jq '' $file
+  rm -i $file
+done
+```
 
-In order to do so you'll need to acquire **4** developer tokens from Twitter as
-documented at
+One could then use `git diff` and `grep` to capture the deleted IDs.
+
+## Step 4: Delete
+
+Delete the tweets (`twitter_rm.py`).
+
+In order to do so, you'll need to acquire **4** developer tokens from Twitter
+as documented at
 [python-twitter](https://python-twitter.readthedocs.io/en/latest/getting_started.html).
 
-I stored mine in a file called `secrets`, but the variables you should export into the
-shell are
+I stored mine in a file called `secrets`, but the variables you should export
+into the shell or the Docker environment that will run your tasks are:
 
 ```text
 CONSUMER_KEY
@@ -95,10 +114,16 @@ ACCESS_TOKEN
 ACCESS_TOKEN_SECRET
 ```
 
-So in my case I do `source secrets && PYTHONUNBUFFERED=1 ./twitter_rm.py |tee deletions.log`.
+An invocation using a locally-installed Python might look like:
 
-The code after the `&&` just makes the logging faster and stores it to a logfile. A plain
-old `./twitter_rm.py` would work too.
+```shell
+$ source secrets && PYTHONUNBUFFERED=1 ./twitter_rm.py |tee deletions.log
+```
+
+## Requirements
+
+* `export_tweets.js` requires a Node runtime. The Docker image is fine.
+* `twitter_rm.py` requires a Python runtime. The Docker image is fine as well.
 
 ## Ongoing Maintenance
 
@@ -126,3 +151,4 @@ We can then feed that file into:
      docker run --env-file twitter_secrets -v $(pwd):/workarea -it --rm twimg python twitter_rm.py del
 
 And, viol&agrave; you'll remove those tweets!
+
