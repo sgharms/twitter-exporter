@@ -4,3 +4,4 @@ converted_tweets
 deletables.txt
 tweet.js
 twitter_secrets
+**/__pycache__
